@@ -37,7 +37,7 @@ sudo zypper in -l google-chrome-stable
 sudo zypper in -l quassel-mono
 
 # 天气预报插件
-sudo zypper in -l plasmoid-yawp
+sudo zypper -n in -l plasmoid-yawp
 
 # FDesktopRecorder 依赖 ffmpeg 等来自于 Packman 的包，通过指定软件源来强制改变提供商
 sudo zypper ar -fG -r http://download.opensuse.org/repositories/home:/ecsos/openSUSE_13.1/home:ecsos.repo
@@ -47,7 +47,9 @@ sudo zypper -n in -l packman:libswscale2 packman:libswresample0 packman:libavres
 sudo zypper -n in -l KolourPaint
 
 sudo zypper ar -fG -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_13.1/KDE:Extra.repo
-sudo zypper -n in -l musique
+
+# tomahawk use phonon-backend-vlc, so vlc-codecs is needed.
+sudo zypper -n in -l tomahawk vlc-codecs
 
 sudo zypper in -l FDesktopRecorder libswscale2
 
@@ -137,6 +139,8 @@ sudo zypper -n in -l aria2
 
 sudo zypper -n in kate
 
+sudo zypper -n in qgit
+
 # 解决 wireshark 没有权限访问网络接口的问题
 sudo /usr/sbin/groupadd wireshark
 sudo /usr/sbin/usermod -a -G wireshark bruce
@@ -144,11 +148,20 @@ sudo /usr/bin/chgrp wireshark /usr/bin/dumpcap
 sudo /usr/bin/chmod 4754 /usr/bin/dumpcap
 
 # 添加有用的易于理解的别名
+echo "alias today='date "+%Y-%m-%d"'">>~/.bashrc
 echo 'alias zin="sudo zypper in"'>>~/.bashrc
 echo 'alias zup="sudo zypper up"'>>~/.bashrc
 echo 'alias zls="zypper ls"'>>~/.bashrc
 echo 'alias zmr="sudo zypper mr"'>>~/.bashrc
 echo 'alias zrr="sudo zypper rr"'>>~/.bashrc
+
+echo "alias lxadd='python ~/xunlei-lixian/lixian_cli.py add'">>~/.bashrc
+echo "alias lxcfg='python ~/xunlei-lixian/lixian_cli.py config'">>~/.bashrc
+echo "alias lxdl='python ~/xunlei-lixian/lixian_cli.py download'">>~/.bashrc
+echo "alias lxin='python ~/xunlei-lixian/lixian_cli.py login'">>~/.bashrc
+echo "alias lxls='python ~/xunlei-lixian/lixian_cli.py list'">>~/.bashrc
+echo "alias lxout='python ~/xunlei-lixian/lixian_cli.py logout'">>~/.bashrc
+echo -E "alias lxlstoday='lxls `date  "+%Y-%m-%d"`'">>~/.bashrc
 . ~/.bashrc
 
 
