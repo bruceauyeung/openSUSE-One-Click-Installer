@@ -46,6 +46,8 @@ sudo zypper -n in -l packman:libswscale2 packman:libswresample0 packman:libavres
 # 和微软绘图及其相似的KDE绘图工具
 sudo zypper -n in -l KolourPaint
 
+sudo zypper -n in libreoffice-l10n-zh-CN libreoffice-kde4
+
 sudo zypper ar -fG -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_13.1/KDE:Extra.repo
 
 # tomahawk use phonon-backend-vlc, so vlc-codecs is needed.
@@ -120,11 +122,13 @@ wget --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2F
 # 安装歌词字幕插件
 sudo zypper in -l osdlyrics
 
-# 解压 rar 文件
-sudo zypper -n in -l unrar
+# 压缩，解压 rar 文件
+sudo zypper -n in -l rar unrar
 
 # 支持 7zip 压缩包
 sudo zypper in -l p7zip
+
+
 
 # 支付宝安全控件的依赖包
 sudo zypper in libpng12-0
@@ -154,10 +158,12 @@ echo 'alias zup="sudo zypper up"'>>~/.bashrc
 echo 'alias zls="zypper ls"'>>~/.bashrc
 echo 'alias zmr="sudo zypper mr"'>>~/.bashrc
 echo 'alias zrr="sudo zypper rr"'>>~/.bashrc
+echo 'alias zrm="sudo zypper rm"'>>~/.bashrc
+echo 'alias zse="zypper se"'>>~/.bashrc
 
 echo "alias lxadd='python ~/xunlei-lixian/lixian_cli.py add'">>~/.bashrc
 echo "alias lxcfg='python ~/xunlei-lixian/lixian_cli.py config'">>~/.bashrc
-echo "alias lxdl='python ~/xunlei-lixian/lixian_cli.py download'">>~/.bashrc
+echo "alias lxdl='python ~/xunlei-lixian/lixian_cli.py download --continue'">>~/.bashrc
 echo "alias lxin='python ~/xunlei-lixian/lixian_cli.py login'">>~/.bashrc
 echo "alias lxls='python ~/xunlei-lixian/lixian_cli.py list'">>~/.bashrc
 echo "alias lxout='python ~/xunlei-lixian/lixian_cli.py logout'">>~/.bashrc
