@@ -55,69 +55,10 @@ sudo zypper -n in -l tomahawk vlc-codecs
 
 sudo zypper in -l FDesktopRecorder libswscale2
 
-# TODO:安装 WPS
-exec 3<<'EOF'
-from HTMLParser import HTMLParser
-import urllib2,urlparse
-url = "http://community.wps.cn/download/"
-
-class LinkExtractor(HTMLParser):
-
-    def reset(self):
-        HTMLParser.reset(self)
-        self.links      = []
-        self.latestRPMLink=''
-
-    def handle_starttag(self, tag, attrs):
-        if tag.lower() == 'a':
-            for (key, value) in attrs:
-                #print key,value
-                if (key.lower() == 'href') and (value.lower().endswith('.rpm')):
-                    #newUrl = urlparse.urljoin(self.baseUrl, value)
-                    self.links = self.links + [value]
-    def printLinks(self):
-        for link in self.links:
-            print link
-            
-    def findLatestWpsRpmLink(self):
-        for link in self.links:
-            if self.latestRPMLink !='':
-                rpmFileName = link[link.rindex('/')+1:]
-                rVerInfo=rpmFileName.split('-')[2].split('.')
-                
-                latestRPMFile=self.latestRPMLink[self.latestRPMLink.rindex('/')+1:]
-                lVerInfo=latestRPMFile.split('-')[2].split('.')
-                
-                for num in range(4):
-                    if rVerInfo[num] > lVerInfo[num]:
-                        self.latestRPMLink = link
-                        break
-                    elif rVerInfo[num] == lVerInfo[num]:
-                        continue
-                    else:
-                        break                        
-            else:
-                self.latestRPMLink = link
-                
-        print self.latestRPMLink
-            
-        
-req = urllib2.Request(url)
-fd = urllib2.urlopen(req)
-extractor = LinkExtractor()
-extractor.feed(fd.read())
-extractor.findLatestWpsRpmLink()
-EOF
-LATEST_WPS_RPM_LINK=`python /dev/fd/3`
-exec 3<&-
-wget -P /tmp '$LATEST_WPS_RPM_LINK'
-LATEST_WPS_RPM_FNAME=`echo '$LATEST_WPS_RPM_LINK'| cut -d'/' -f 8`
-sudo zypper in /tmp/'$LATEST_WPS_RPM_FNAME'
-
 # TODO:自动挂载windows分区
 # TODO:自动安装 Oracle JDK
 
-wget --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com" "http://download.oracle.com/otn-pub/java/jdk/7u15-b03/jdk-7u15-linux-x64.rpm"
+# wget --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com" "http://download.oracle.com/otn-pub/java/jdk/7u15-b03/jdk-7u15-linux-x64.rpm"
 
 # 安装歌词字幕插件
 sudo zypper in -l osdlyrics
@@ -143,11 +84,11 @@ sudo zypper -n in -l aria2
 
 sudo zypper -n in kate
 
-sudo zypper -n in qgit
+# sudo zypper -n in qgit
 
 # 解决 wireshark 没有权限访问网络接口的问题
 sudo /usr/sbin/groupadd wireshark
-sudo /usr/sbin/usermod -a -G wireshark bruce
+sudo /usr/sbin/usermod -a -G wireshark $USER
 sudo /usr/bin/chgrp wireshark /usr/bin/dumpcap
 sudo /usr/bin/chmod 4754 /usr/bin/dumpcap
 
