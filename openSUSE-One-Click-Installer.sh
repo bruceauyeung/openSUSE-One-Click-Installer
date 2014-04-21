@@ -57,6 +57,8 @@ sudo zypper in -l FDesktopRecorder libswscale2
 
 # TODO:自动挂载windows分区
 # TODO:自动安装 Oracle JDK
+# sudo zypper ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_13.1/home:Superpeppo89.repo
+# zypper -n in -l java-1_8_0-sun 
 
 # wget --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com" "http://download.oracle.com/otn-pub/java/jdk/7u15-b03/jdk-7u15-linux-x64.rpm"
 
@@ -99,7 +101,7 @@ echo 'alias zup="sudo zypper up"'>>~/.bashrc
 echo 'alias zls="zypper ls"'>>~/.bashrc
 echo 'alias zmr="sudo zypper mr"'>>~/.bashrc
 echo 'alias zrr="sudo zypper rr"'>>~/.bashrc
-echo 'alias zrm="sudo zypper rm"'>>~/.bashrc
+echo 'alias zrm="sudo zypper rm -u"'>>~/.bashrc
 echo 'alias zse="zypper se"'>>~/.bashrc
 
 echo "alias lxadd='python ~/xunlei-lixian/lixian_cli.py add'">>~/.bashrc
