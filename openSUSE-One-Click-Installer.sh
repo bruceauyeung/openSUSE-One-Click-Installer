@@ -2,6 +2,8 @@
 
 # 修改语言为英语，确保命令的输出都是英语，这样对命令输出的处理就不会出错了
 export LANG=default
+OSVER=$(lsb_release -r|awk '{print $2}')
+ARCH=$(uname -m)
 
 # 禁用 cd 源
 CD_REPO_ID=`zypper lr -u | awk -F'[|+]'  '$6 ~ /^\s*cd:\/\// {print $1}'`
@@ -11,36 +13,44 @@ if [ -n "$CD_REPO_ID" ]; then
 fi
 
 # 刷新软件源并更新系统
-sudo zypper refresh
-sudo zypper update -l
+sudo zypper -n refresh
+sudo zypper -n update -l
+
+sudo zypper -n in -l aria2
 
 # 安装 gstreamer 相关插件，这样基于 phonon 框架的多媒体软件就可以播放受专利保护的多媒体文件了
-sudo zypper in -l gstreamer-0_10-plugins-base gstreamer-0_10-plugins-good gstreamer-0_10-plugins-bad gstreamer-0_10-plugins-ugly gstreamer-0_10-plugins-ugly-orig-addon gstreamer-0_10-plugins-ffmpeg gstreamer-0_10-plugins-fluendo_mp3
+sudo zypper -n in -l gstreamer-0_10-plugins-base gstreamer-0_10-plugins-good gstreamer-0_10-plugins-bad gstreamer-0_10-plugins-ugly gstreamer-0_10-plugins-ugly-orig-addon gstreamer-0_10-plugins-ffmpeg gstreamer-0_10-plugins-fluendo_mp3
 
 # 安装smplayer, mplayer, w32codec-all
-sudo zypper ar -f http://packman.inode.at/suse/openSUSE_13.1/ packman
+# PACKMAN_REPO_EXISTS=$(zypper ls|grep packman|wc -l)
+sudo zypper --gpg-auto-import-keys ar -fG http://packman.inode.at/suse/openSUSE_$OSVER/ packman
+
+# w32codec-all needs libstdc++.so.5 which is contained in package libstdc++33
+# devel:gcc holds libstdc++33
+sudo zypper --gpg-auto-import-keys ar -fG http://download.opensuse.org/repositories/devel:/gcc/openSUSE_$OSVER/ devel:gcc
 sudo zypper refresh
-sudo zypper in -l  mplayer smplayer w32codec-all smplayer-lang
+sudo zypper -n in -l  mplayer smplayer w32codec-all smplayer-lang libstdc++33
 
 # 解决Firefox不能播放flash在线视频
-sudo zypper in -l flash-player flash-player-kde4 pullin-flash-player
+sudo zypper -n in -l flash-player flash-player-kde4 pullin-flash-player
 
 # 在大陆常常不能访问 dl.google.com，所以添加 IP地址映射
 sudo sh -c "echo '203.208.46.163    dl.google.com' > /etc/hosts"
 
 # Google Chrome
-sudo zypper ar -f http://dl.google.com/linux/chrome/rpm/stable/$(uname -m) Google-Chrome
+sudo zypper --gpg-auto-import-keys ar -fG http://dl.google.com/linux/chrome/rpm/stable/$(uname -m) Google-Chrome
 sudo zypper ref
-sudo zypper in -l google-chrome-stable
+sudo zypper -n in -l google-chrome-stable
 
 # quassel，一款先进的跨平台的分布式IRC聊天客户端，界面非常友好功能很强大。
-sudo zypper in -l quassel-mono
+sudo zypper -n in -l quassel-mono
 
+sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_$OSVER/KDE:Extra.repo
 # 天气预报插件
 sudo zypper -n in -l plasmoid-yawp
 
 # FDesktopRecorder 依赖 ffmpeg 等来自于 Packman 的包，通过指定软件源来强制改变提供商
-sudo zypper ar -fG -r http://download.opensuse.org/repositories/home:/ecsos/openSUSE_13.1/home:ecsos.repo
+sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/ecsos/openSUSE_$OSVER/home:ecsos.repo
 sudo zypper -n in -l packman:libswscale2 packman:libswresample0 packman:libavresample1 packman:libavfilter3 packman:libavdevice55 packman:ffmpeg FDesktopRecorder
 
 # 和微软绘图及其相似的KDE绘图工具
@@ -48,51 +58,99 @@ sudo zypper -n in -l KolourPaint
 
 sudo zypper -n in libreoffice-l10n-zh-CN libreoffice-kde4
 
-sudo zypper ar -fG -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_13.1/KDE:Extra.repo
+sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_$OSVER/KDE:Extra.repo
 
 # tomahawk use phonon-backend-vlc, so vlc-codecs is needed.
 sudo zypper -n in -l tomahawk vlc-codecs
 
-sudo zypper in -l FDesktopRecorder libswscale2
+sudo zypper -n in -l FDesktopRecorder libswscale2
 
 # TODO:自动挂载windows分区
 # TODO:自动安装 Oracle JDK
 # sudo zypper ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_13.1/home:Superpeppo89.repo
 # zypper -n in -l java-1_8_0-sun 
 
-# wget --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com" "http://download.oracle.com/otn-pub/java/jdk/7u15-b03/jdk-7u15-linux-x64.rpm"
+# 自动安装 Oracle JDK 最新版本
+if [ "$ARCH"="x86_64" ]
+then
+  JDK_FILE_NAME="jdk-8u25-linux-x64.rpm"
+  JDK_RPM_NAME="jdk1.8.0_25-1.8.0_25-fcs.x86_64"    
+else
+  JDK_FILE_NAME="jdk-8u25-linux-i586.rpm"
+  JDK_RPM_NAME="jdk1.8.0_25-1.8.0_25-fcs"
+fi
 
+JDK_INSTALLED_RPM_COUNT=`rpm -qa|grep $JDK_RPM_NAME|wc -l`
+
+if [ "$JDK_INSTALLED_RPM_COUNT" == "0" ]
+then
+  # wget -c -p ~ --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/$JDK_FILE_NAME"
+  aria2c -c -d ~ -x 10 -s 10 --check-certificate=false --header="Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/$JDK_FILE_NAME"
+  sudo zypper -n in ~/$JDK_FILE_NAME
+fi
+
+sudo zypper -n in -l git git-daemon
+sudo zypper -n in -l krusader 
 # 安装歌词字幕插件
-sudo zypper in -l osdlyrics
+sudo zypper -n in -l osdlyrics
 
 # 压缩，解压 rar 文件
 sudo zypper -n in -l rar unrar
 
 # 支持 7zip 压缩包
-sudo zypper in -l p7zip
+sudo zypper -n in -l p7zip
+
+# 安装了该包后 ark 打开一些 windows 下创建的 zip 时不再乱码
+# 这些 zip 包中的文件名实际上是以 GBK 编码的
+sudo zypper -n in -l unzip-rcc
 
 
 
 # 支付宝安全控件的依赖包
-sudo zypper in libpng12-0
+sudo zypper -n in libpng12-0
 
 # 系统统计工具集，包含 sar, pidstat 等
-sudo zypper in -l sysstat
+sudo zypper -n in -l sysstat
+sudo zypper -n in -l dmidecode
 
 # wireshark 网络抓包工具
 sudo zypper -n in -l wireshark
-
-sudo zypper -n in -l aria2
-
-sudo zypper -n in kate
-
-# sudo zypper -n in qgit
-
 # 解决 wireshark 没有权限访问网络接口的问题
 sudo /usr/sbin/groupadd wireshark
 sudo /usr/sbin/usermod -a -G wireshark $USER
 sudo /usr/bin/chgrp wireshark /usr/bin/dumpcap
 sudo /usr/bin/chmod 4754 /usr/bin/dumpcap
+
+
+
+sudo zypper -n in kate
+
+# kate 和 kwrite 支持 rust 语法高亮
+`mkdir -p ~/.kde4/share/apps/katepart/syntax/ && aria2c --conditional-get=true --allow-overwrite=true -c -d ~/.kde4/share/apps/katepart/syntax/ --check-certificate=false https://raw.githubusercontent.com/mozilla/rust/master/src/etc/kate/rust.xml`
+# sudo zypper -n in qgit
+
+sudo zypper -n in KDiff3
+
+# http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3-4.3.18_96516_openSUSE123-1.x86_64.rpm 依赖下面的包
+# sudo zypper -n in gcc kernel-source virtualbox virtualbox-qt
+
+if [ "$ARCH"="x86_64" ]
+then
+  VIRTUALBOX_FILE_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1.x86_64.rpm"
+  VIRTUALBOX_FILE_URL="http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3-4.3.18_96516_openSUSE123-1.x86_64.rpm"
+  VIRTUALBOX_RPM_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1.x86_64"    
+else
+  VIRTUALBOX_FILE_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1.i586.rpm"
+  VIRTUALBOX_FILE_URL="http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3-4.3.18_96516_openSUSE123-1.i586.rpm"
+  VIRTUALBOX_RPM_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1"    
+fi
+
+VIRTUALBOX_INSTALLED_RPM_COUNT=`rpm -qa|grep $VIRTUALBOX_RPM_NAME|wc -l`
+if [ "$VIRTUALBOX_INSTALLED_RPM_COUNT" == "0" ]
+then
+  aria2c -c -d ~ -x 10 -s 10 --check-certificate=false  "$VIRTUALBOX_FILE_URL"
+  sudo zypper -n in ~/"$VIRTUALBOX_FILE_NAME" gcc kernel-source
+fi
 
 # 添加有用的易于理解的别名
 echo "alias today='date "+%Y-%m-%d"'">>~/.bashrc
@@ -103,6 +161,7 @@ echo 'alias zmr="sudo zypper mr"'>>~/.bashrc
 echo 'alias zrr="sudo zypper rr"'>>~/.bashrc
 echo 'alias zrm="sudo zypper rm -u"'>>~/.bashrc
 echo 'alias zse="zypper se"'>>~/.bashrc
+echo 'alias zinfo="zypper info"'>>~/.bashrc
 
 echo "alias lxadd='python ~/xunlei-lixian/lixian_cli.py add'">>~/.bashrc
 echo "alias lxcfg='python ~/xunlei-lixian/lixian_cli.py config'">>~/.bashrc
