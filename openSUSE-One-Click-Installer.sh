@@ -5,13 +5,13 @@ export LANG=default
 SCRIPT_DIR=$(dirname $0)
 
 if [ ! -f $SCRIPT_DIR/README.md ]; then
-  wget -nd -c -p $SCRIPT_DIR --no-check-certificate --no-cookies  "https://raw.githubusercontent.com/redhatlinux10/openSUSE-One-Click-Installer/master/README.md"
+  wget -nd -c -P $SCRIPT_DIR --no-check-certificate --no-cookies  "https://raw.githubusercontent.com/redhatlinux10/openSUSE-One-Click-Installer/master/README.md"
 fi
 if [ ! -f $SCRIPT_DIR/ooci.conf ]; then
-  wget -nd -c -p $SCRIPT_DIR --no-check-certificate --no-cookies  "https://raw.githubusercontent.com/redhatlinux10/openSUSE-One-Click-Installer/master/ooci.conf"
+  wget -nd -c -P $SCRIPT_DIR --no-check-certificate --no-cookies  "https://raw.githubusercontent.com/redhatlinux10/openSUSE-One-Click-Installer/master/ooci.conf"
 fi
 
-cat $SCRIPT_DIR/README.md
+cat "$SCRIPT_DIR/README.md"
 read -p "你确定继续吗？ (Y|n) : " confirm_continue
 
 if [ -z "$confirm_continue" ]; then
