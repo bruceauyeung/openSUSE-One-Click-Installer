@@ -4,8 +4,11 @@
 export LANG=default
 SCRIPT_DIR=$(dirname $0)
 
-if [ -f $SCRIPT_DIR/README.md ]; then
-  wget -c -p $SCRIPT_DIR --no-check-certificate --no-cookies  "https://github.com/redhatlinux10/openSUSE-One-Click-Installer/blob/master/README.md"
+if [ ! -f $SCRIPT_DIR/README.md ]; then
+  wget -nd -c -p $SCRIPT_DIR --no-check-certificate --no-cookies  "https://raw.githubusercontent.com/redhatlinux10/openSUSE-One-Click-Installer/master/README.md"
+fi
+if [ ! -f $SCRIPT_DIR/ooci.conf ]; then
+  wget -nd -c -p $SCRIPT_DIR --no-check-certificate --no-cookies  "https://raw.githubusercontent.com/redhatlinux10/openSUSE-One-Click-Installer/master/ooci.conf"
 fi
 
 cat $SCRIPT_DIR/README.md
@@ -127,10 +130,14 @@ if [ "$install_oracle_jdk" != "0" ]; then
   fi
 fi
 sudo zypper -n in -l git git-daemon
-sudo zypper -n in -l krusader 
-# 安装歌词字幕插件
-sudo zypper -n in -l osdlyrics
 
+if [ "$install_krusader" != "0" ]; then
+  sudo zypper -n in -l krusader
+fi
+# 安装歌词字幕插件
+if [ "$install_osdlyrics" != "0" ]; then
+  sudo zypper -n in -l osdlyrics
+fi
 # 压缩，解压 rar 文件
 sudo zypper -n in -l rar unrar
 

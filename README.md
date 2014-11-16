@@ -20,6 +20,7 @@ openSUSE一键安装脚本，由 Bruce Auyeung ( bruce.auyeung#yahoo.com ) 编�
 (*) 安装 tomahawk，一款基于QT编写的非常美观的音乐播放软件。
 (*) 安装 Oracle JDK 最新版本。
 (*) 安装 krusader，一款双面板的文件管理器，和 Total Commander 极其类似。
+(*) 安装 osdlyrics，一款第三方歌词显示程序。它为 Linux 下的多款播放器提供类似 Windows 下 QQ音乐的歌词显示功能，并能自动从网络上下载歌词。
 (*) 安装 rar， unrar，用于压缩，解压 rar 文件，同时 Ark 也支持 rar 文件了。
 (*) 安装 p7zip，用于支持 7zip 压缩包，同时 Ark 也支持 7zip 文件了。
 (*) 安装 unzip-rcc，安装了该包后 ark 打开一些 windows 下创建的 zip 文件（这些 zip 包中的文件名实际上是以 GBK 编码的）时不再乱码。
@@ -28,7 +29,7 @@ openSUSE一键安装脚本，由 Bruce Auyeung ( bruce.auyeung#yahoo.com ) 编�
 (*) 安装 KDiff3，类似 Beyond Compare 的文件/文件夹比较工具。
 (*) 安装 VirtualBox，Oracle 出品的虚拟机。
 (*) 定义 zypper 相关的别名，比如 zin 对应于 sudo zypper in, zrm 对应于 sudo zypper rm -u。
-
+(*) 定义 xunlei-lixian 相关的别名，比如 lxlstoday 用于列出当天添加的xunlei-lixian下载任务。
 ============================
 
 
