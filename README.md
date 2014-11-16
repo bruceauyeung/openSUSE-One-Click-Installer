@@ -7,8 +7,8 @@ openSUSE一键安装脚本，由 Bruce Auyeung ( bruce.auyeung#yahoo.com ) 编�
 比如多媒体播放相关的软件包, FireFox的Flash插件, Google Chrome浏览器,  Oracle JDK(不是JRE，是适合于开发者用的JDK), Oracle Java(就是JRE，适合一般用户), wireshark, Virtual Box虚拟机等等。    
 无论是对于新手还是老手，该脚本都可以为你节约大量的时间。    
 该脚本具体的修改内容或者要安装的软件包如下(如果你希望取消某些软件包的安装，可以通过定制 ooci.conf 文件来实现，该配置文件和 openSUSE-One-Click-Installer.sh 同目录)：    
--- 禁用 cd 源。    
---  安装 gstreamer 相关插件，这样基于 phonon 框架的多媒体软件就可以播放受专利保护的多媒体文件了。     
+-- 禁用 DVD 光盘源。    
+-- 安装 gstreamer 相关插件，这样基于 phonon 框架的多媒体软件就可以播放受专利保护的多媒体文件了。     
 -- 安装 Smplayer，同时还会自动安装 w32codec-all，这样Smplayer就可以播放 rmvb, wmv 等文件格式了。     
 -- 安装 Flash Player，解决Firefox不能播放flash在线视频的问题。    
 -- 安装 Google Chrome，同时解决访问不了 Google Chrome 源不能访问的问题。     
