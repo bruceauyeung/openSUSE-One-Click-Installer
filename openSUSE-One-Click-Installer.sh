@@ -86,7 +86,7 @@ fi
 if [ "$install_fdesktoprecorder" != "0" ]; then
   # FDesktopRecorder 依赖 ffmpeg 等来自于 Packman 的包，通过指定软件源来强制改变提供商
   sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/ecsos/openSUSE_$OSVER/home:ecsos.repo
-  sudo zypper -n in -l packman:libswscale2 packman:libswresample0 packman:libavresample1 packman:libavfilter3 packman:libavdevice55 packman:ffmpeg FDesktopRecorder
+  sudo zypper -n in -l packman:libavutil52 packman:libswscale2 packman:libswresample0 packman:libavresample1 packman:libavfilter4 packman:libavdevice55 packman:ffmpeg FDesktopRecorder
 fi
 
 # 和微软绘图及其相似的KDE绘图工具
@@ -101,13 +101,15 @@ fi
 if [ "$install_tomahawk" != "0" ]; then
   sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_$OSVER/KDE:Extra.repo
   # tomahawk use phonon-backend-vlc, so vlc-codecs ( in packman ) is needed.
-  sudo zypper -n in -l tomahawk vlc-codecs
+  sudo zypper -n in -l tomahawk packman:vlc-codecs
 fi
 
 # TODO:自动挂载windows分区
-# TODO:自动安装 Oracle JDK
-# sudo zypper ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_13.1/home:Superpeppo89.repo
-# zypper -n in -l java-1_8_0-sun 
+# 自动安装 Oracle Java
+if [ "$install_oracle_java" != "0" ]; then
+  sudo zypper ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_13.1/home:Superpeppo89.repo
+  zypper -n in -l java-1_8_0-sun java-1_8_0-sun-plugin
+fi
 
 # 自动安装 Oracle JDK 最新版本
 if [ "$install_oracle_jdk" != "0" ]; then
