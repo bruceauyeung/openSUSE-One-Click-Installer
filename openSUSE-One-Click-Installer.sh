@@ -104,6 +104,11 @@ if [ "$install_tomahawk" != "0" ]; then
   sudo zypper -n in -l tomahawk packman:vlc-codecs
 fi
 
+if [ "$install_vlc" != "0" ]; then
+  # vlc-codecs 包含许多受限多媒体格式的解码器
+  sudo zypper -n in -l packman:vlc packman:vlc-codecs packman:xvba-video
+fi
+
 # TODO:自动挂载windows分区
 # 自动安装 Oracle Java
 if [ "$install_oracle_java" != "0" ]; then
@@ -131,7 +136,8 @@ if [ "$install_oracle_jdk" != "0" ]; then
     sudo zypper -n in ~/$JDK_FILE_NAME
   fi
 fi
-sudo zypper -n in -l git git-daemon
+sudo zypper -n in -l git
+git config credential.helper 'cache --timeout 3600'
 
 if [ "$install_krusader" != "0" ]; then
   sudo zypper -n in -l krusader
@@ -150,14 +156,44 @@ sudo zypper -n in -l p7zip
 # 这些 zip 包中的文件名实际上是以 GBK 编码的
 sudo zypper -n in -l unzip-rcc
 
+if [ "$install_iptux" != "0" ]; then
+  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
+  # 飞鸽传书的 linux 版本
+  sudo zypper -n in -l iptux
+fi
+
+if [ "$install_hotshots" != "0" ]; then
+  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/Lazy_Kent/openSUSE_$OSVER/home:Lazy_Kent.repo
+  sudo zypper -n in -l hotshots
+fi
 
 
-# 支付宝安全控件的依赖包
-sudo zypper -n in libpng12-0
+
+
+if [ "$install_aliedit" != "0" ]; then
+  # 支付宝安全控件的依赖包
+  sudo zypper -n in libpng12-0
+
+  # 安装支付宝安全控件
+  ALIEDIT_TMP_DIR=`mktemp -d`
+  aria2c --conditional-get=true --allow-overwrite=true -c -d $ALIEDIT_TMP_DIR --check-certificate=false https://download.alipay.com/alipaysc/linux/aliedit/1.0.3.20/aliedit.tar.gz
+
+  tar -C $ALIEDIT_TMP_DIR -xzvf  $ALIEDIT_TMP_DIR/aliedit.tar.gz
+
+  # aliedit.sh 需要键入一个字符来退出执行
+  sh $ALIEDIT_TMP_DIR/aliedit.sh <<EOF
+  x
+  EOF
+  rm -rf $ALIEDIT_TMP_DIR
+fi
+
 
 # 系统统计工具集，包含 sar, pidstat 等
 sudo zypper -n in -l sysstat
 sudo zypper -n in -l dmidecode
+
+# 包含 glxinfo, glxgears 等工具
+sudo zypper -n in -l Mesa-demo-x
 
 # wireshark 网络抓包工具
 if [ "$install_wireshark" != "0" ]; then
