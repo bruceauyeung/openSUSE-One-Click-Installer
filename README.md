@@ -18,6 +18,10 @@ openSUSE一键安装脚本，由 Bruce Auyeung ( bruce.auyeung#yahoo.com ) 编�
 -- 安装 kolourpaint，一款和微软绘图及其相似的KDE绘图工具。   
 -- 安装 libreoffice 中文语言包，并解决 libreoffice 和 KDE 桌面主题不协调的问题。   
 -- 安装 tomahawk，一款基于QT编写的非常美观的音乐播放软件。    
+-- 安装 VLC多媒体播放器和硬件解码包，可以很方便的支持视频硬件解码（注意硬解我只测试了AMD显卡，而且需要已经安装AMD私有驱动）。    
+-- 安装 支付宝安全控件（从支付宝官方网站下载并安装）。    
+-- 安装 hotshots 屏幕截图软件，可以保存为多种格式，还可以添加文字注释，划线，箭头，上传图片到网络图床等。    
+-- 安装 飞鸽传书的 linux 版本。    
 -- 安装 Oracle JDK 最新版本。默认安装的是JDK，不是JRE，要安装JRE的请修改 ooci.conf 文件  
 -- 安装 krusader，一款双面板的文件管理器，和 Total Commander 极其类似。   
 -- 安装 osdlyrics，一款第三方歌词显示程序。它为 Linux 下的多款播放器提供类似 Windows 下 QQ音乐的歌词显示功能，并能自动从网络上下载歌词。  
