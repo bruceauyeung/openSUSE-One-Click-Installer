@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # 修改语言为英语，确保命令的输出都是英语，这样对命令输出的处理就不会出错了
+OLD_LANG=$LANG
 export LANG=default
 SCRIPT_DIR=$(dirname $0)
 
@@ -237,6 +238,19 @@ if [ "$install_virtualbox" != "0" ]; then
     aria2c -c -d ~ -x 10 -s 10 --check-certificate=false  "$VIRTUALBOX_FILE_URL"
     sudo zypper -n in ~/"$VIRTUALBOX_FILE_NAME" gcc kernel-source
   fi
+fi
+
+if [ "$translate_user_dirs_names_from_chinese_to_english" != "0" ]; then
+  export LANG=default
+  xdg-user-dirs-update --force
+  cd ~/桌面/ && ls -A | xargs -i mv -f {} ~/Desktop/ && rmdir ~/桌面
+  cd ~/下载/ && ls -A | xargs -i mv -f {} ~/Downloads/ && rmdir ~/下载
+  cd ~/模板/ && ls -A | xargs -i mv -f {} ~/Templates/ && rmdir ~/模板
+  cd ~/公共/ && ls -A | xargs -i mv -f {} ~/Public/ && rmdir ~/公共
+  cd ~/文档/ && ls -A | xargs -i mv -f {} ~/Documents/ && rmdir ~/文档
+  cd ~/音乐/ && ls -A | xargs -i mv -f {} ~/Music/ && rmdir ~/音乐
+  cd ~/图片/ && ls -A | xargs -i mv -f {} ~/Pictures/ && rmdir ~/图片
+  cd ~/视频/ && ls -A | xargs -i mv -f {} ~/Videos/ && rmdir ~/视频
 fi
 # 添加有用的易于理解的别名
 BASH_ZYPPER_ALIASES_DEFINED_KEY="# === ooci bash zypper aliases ==="

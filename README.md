@@ -32,6 +32,7 @@ openSUSE一键安装脚本，由 Bruce Auyeung ( bruce.auyeung#yahoo.com ) 编�
 -- 安装 wireshark，著名的网络抓包工具。    
 -- 安装 KDiff3，类似 Beyond Compare 的文件/文件夹比较工具。   
 -- 安装 VirtualBox，Oracle 出品的虚拟机。   
+-- 把中文的用户目录转换为英文目录，源中文目录中的文件会自动迁移到英文目录中。转换的好处是可以很方便的在终端中进入用户目录，哪怕是在没有中文输入法的情况下。  
 -- 定义 zypper 相关的别名，比如 zin 对应于 sudo zypper in, zrm 对应于 sudo zypper rm -u。    
 -- 定义 xunlei-lixian 相关的别名，比如 lxlstoday 用于列出当天添加的xunlei-lixian下载任务。  
 
