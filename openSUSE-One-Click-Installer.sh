@@ -43,6 +43,7 @@ sudo zypper --gpg-auto-import-keys ar -fG http://packman.inode.at/suse/openSUSE_
 #w32codec-all依赖于包 libstdc++33， 而devel:gcc 里有 libstdc++33
 sudo zypper --gpg-auto-import-keys ar -fG http://download.opensuse.org/repositories/devel:/gcc/openSUSE_$OSVER/ devel:gcc
 
+
 # 刷新软件源并更新系统
 sudo zypper -n refresh
 sudo zypper -n update -l
@@ -57,6 +58,14 @@ fi
 # 安装smplayer, mplayer, w32codec-all
 if [ "$install_smplayer" != "0" ]; then
   sudo zypper -n in -l  mplayer smplayer w32codec-all smplayer-lang libstdc++33
+fi
+
+if [ "$install_kwplayer" != "0" ]; then
+  # kwplayer needs this repo
+  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_13.2/home:opensuse_zh.repo
+  # kwplayer needs python3-leveldb
+  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/devel:/languages:/python3/openSUSE_13.2/devel:languages:python3.repo
+  sudo zypper -n in -l python3-leveldb dbus-1-python3 kwplayer
 fi
 
 # 解决Firefox不能播放flash在线视频
@@ -168,9 +177,6 @@ if [ "$install_hotshots" != "0" ]; then
   sudo zypper -n in -l hotshots
 fi
 
-
-
-
 if [ "$install_aliedit" != "0" ]; then
   # 支付宝安全控件的依赖包
   sudo zypper -n in libpng12-0
@@ -182,14 +188,13 @@ if [ "$install_aliedit" != "0" ]; then
   tar -C $ALIEDIT_TMP_DIR -xzvf  $ALIEDIT_TMP_DIR/aliedit.tar.gz
 
   # aliedit.sh 需要键入一个字符来退出执行
-  sh $ALIEDIT_TMP_DIR/aliedit.sh <<EOF
+  sh $ALIEDIT_TMP_DIR/aliedit.sh <<QUITMARK
   x
-  EOF
+QUITMARK
   rm -rf $ALIEDIT_TMP_DIR
 fi
 
-
-# 系统统计工具集，包含 sar, pidstat 等
+# 系统统计工具集, 包含 sar, pidstat 等
 sudo zypper -n in -l sysstat
 sudo zypper -n in -l dmidecode
 
@@ -280,8 +285,3 @@ if [ "$define_bash_xunlei_lixian_aliases" != "0" -a "$BASH_XUNLEI_LIXIAN_ALIASES
   echo "alias lxout='python ~/xunlei-lixian/lixian_cli.py logout'">>~/.bashrc
   echo -E "alias lxlstoday='lxls `date  "+%Y-%m-%d"`'">>~/.bashrc
 fi
-
-
-
-
-
