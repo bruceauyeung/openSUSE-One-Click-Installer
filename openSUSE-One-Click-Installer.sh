@@ -62,9 +62,9 @@ fi
 
 if [ "$install_kwplayer" != "0" ]; then
   # kwplayer needs this repo
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_13.2/home:opensuse_zh.repo
+  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
   # kwplayer needs python3-leveldb
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/devel:/languages:/python3/openSUSE_13.2/devel:languages:python3.repo
+  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/devel:/languages:/python3/openSUSE_$OSVER/devel:languages:python3.repo
   sudo zypper -n in -l python3-leveldb dbus-1-python3 kwplayer
 fi
 
@@ -122,7 +122,7 @@ fi
 # TODO:自动挂载windows分区
 # 自动安装 Oracle Java
 if [ "$install_oracle_java" != "0" ]; then
-  sudo zypper ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_13.1/home:Superpeppo89.repo
+  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_$OSVER/home:Superpeppo89.repo
   zypper -n in -l java-1_8_0-sun java-1_8_0-sun-plugin
 fi
 
@@ -131,7 +131,7 @@ if [ "$install_oracle_jdk" != "0" ]; then
   if [ "$ARCH"="x86_64" ]
   then
     JDK_FILE_NAME="jdk-8u25-linux-x64.rpm"
-    JDK_RPM_NAME="jdk1.8.0_25-1.8.0_25-fcs.x86_64"    
+    JDK_RPM_NAME="jdk1.8.0_25-1.8.0_25-fcs.x86_64"
   else
     JDK_FILE_NAME="jdk-8u25-linux-i586.rpm"
     JDK_RPM_NAME="jdk1.8.0_25-1.8.0_25-fcs"
@@ -144,8 +144,18 @@ if [ "$install_oracle_jdk" != "0" ]; then
     # wget -c -p ~ --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/$JDK_FILE_NAME"
     aria2c -c -d ~ -x 10 -s 10 --check-certificate=false --header="Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/$JDK_FILE_NAME"
     sudo zypper -n in ~/$JDK_FILE_NAME
+
+    # TODO: 设置 JDK 8 为缺省版本
   fi
 fi
+
+if [ "$fix_javafx_mediaplayer_creation_error" != "0" ]; then
+  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_$OSVER/home:Superpeppo89.repo
+  
+  # see http://www.oracle.com/technetwork/java/javase/certconfig-2095354.html
+  zypper -n in -l libavformat53
+fi
+
 sudo zypper -n in -l git
 git config credential.helper 'cache --timeout 3600'
 
@@ -218,6 +228,12 @@ sudo zypper -n in kate
 mkdir -p ~/.kde4/share/apps/katepart/syntax/ && aria2c --conditional-get=true --allow-overwrite=true -c -d ~/.kde4/share/apps/katepart/syntax/ --check-certificate=false https://raw.githubusercontent.com/mozilla/rust/master/src/etc/kate/rust.xml
 # sudo zypper -n in qgit
 
+if [ "$install_bcloud" != "0" ]; then
+    # kwplayer needs this repo
+    sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
+    sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/devel:/languages:/python3/openSUSE_$OSVER/devel:languages:python3.repo
+    sudo zypper -n in home_opensuse_zh:bcloud devel_languages_python3:python3-keyring
+fi
 
 if [ "$install_kdiff3" != "0" ]; then
   sudo zypper -n in KDiff3
@@ -230,11 +246,11 @@ if [ "$install_virtualbox" != "0" ]; then
   then
     VIRTUALBOX_FILE_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1.x86_64.rpm"
     VIRTUALBOX_FILE_URL="http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3-4.3.18_96516_openSUSE123-1.x86_64.rpm"
-    VIRTUALBOX_RPM_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1.x86_64"    
+    VIRTUALBOX_RPM_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1.x86_64"
   else
     VIRTUALBOX_FILE_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1.i586.rpm"
     VIRTUALBOX_FILE_URL="http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3-4.3.18_96516_openSUSE123-1.i586.rpm"
-    VIRTUALBOX_RPM_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1"    
+    VIRTUALBOX_RPM_NAME="VirtualBox-4.3-4.3.18_96516_openSUSE123-1"
   fi
 
   VIRTUALBOX_INSTALLED_RPM_COUNT=`rpm -qa|grep $VIRTUALBOX_RPM_NAME|wc -l`
@@ -285,3 +301,6 @@ if [ "$define_bash_xunlei_lixian_aliases" != "0" -a "$BASH_XUNLEI_LIXIAN_ALIASES
   echo "alias lxout='python ~/xunlei-lixian/lixian_cli.py logout'">>~/.bashrc
   echo -E "alias lxlstoday='lxls `date  "+%Y-%m-%d"`'">>~/.bashrc
 fi
+
+
+# mkvtoolnix
