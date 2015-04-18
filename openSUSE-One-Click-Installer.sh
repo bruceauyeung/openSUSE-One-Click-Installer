@@ -130,20 +130,32 @@ fi
 if [ "$install_oracle_jdk" != "0" ]; then
   if [ "$ARCH"="x86_64" ]
   then
-    JDK_FILE_NAME="jdk-8u25-linux-x64.rpm"
-    JDK_RPM_NAME="jdk1.8.0_25-1.8.0_25-fcs.x86_64"
+    JDK_FILE_NAME="jdk-8u45-linux-x64.rpm"
+    JDK_RPM_NAME="jdk1.8.0_45-1.8.0_45-fcs.x86_64"
   else
-    JDK_FILE_NAME="jdk-8u25-linux-i586.rpm"
-    JDK_RPM_NAME="jdk1.8.0_25-1.8.0_25-fcs"
+    JDK_FILE_NAME="jdk-8u45-linux-i586.rpm"
+    JDK_RPM_NAME="jdk1.8.0_45-1.8.0_45-fcs"
   fi
 
   JDK_INSTALLED_RPM_COUNT=`rpm -qa|grep $JDK_RPM_NAME|wc -l`
 
   if [ "$JDK_INSTALLED_RPM_COUNT" == "0" ]
   then
-    # wget -c -p ~ --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/$JDK_FILE_NAME"
-    aria2c -c -d ~ -x 10 -s 10 --check-certificate=false --header="Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/$JDK_FILE_NAME"
-    sudo zypper -n in ~/$JDK_FILE_NAME
+    # wget -c -p ~ --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "http://download.oracle.com/otn-pub/java/jdk/8u31-b13/$JDK_FILE_NAME"
+    aria2c -c -d ~ -x 10 -s 10 --check-certificate=false --header="Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/$JDK_FILE_NAME"
+    
+    sudo rpm -Uvh --nodeps ~/$JDK_FILE_NAME
+    JAVA_BIN_PATH=`rpm -ql $JDK_RPM_NAME|grep -E '[0-9]+/bin/java$'`
+    JAVA_PLUGIN_LIB_PATH=`rpm -ql $JDK_RPM_NAME|grep -E '/libnpjp2.so$'`
+
+    # 获取已经安装的 Java 的 alternative 的最大优先级并加一（忽略不包含 priority 的行）
+    JAVA_BIN_CUR_PRI=`/usr/sbin/update-alternatives --display java|awk '{if($0!~/priority/)next}{max=(max>$4)?max:$4}END{print max+1}'`
+    JAVA_PLUGIN_CUR_PRI=`/usr/sbin/update-alternatives --display javaplugin|awk '{if($0!~/priority/)next}{max=(max>$4)?max:$4}END{print max+1}'`    
+    sudo /usr/sbin/update-alternatives --install "/usr/bin/java" "java" "$JAVA_BIN_PATH" $JAVA_BIN_CUR_PRI
+    sudo /usr/sbin/update-alternatives --install "/usr/lib$(test $(getconf LONG_BIT) -eq 64&&echo '64')/browser-plugins/javaplugin.so" "javaplugin" "$(rpm -ql $JDK_RPM_NAME|grep -E '/libnpjp2.so$')" $JAVA_PLUGIN_CUR_PRI
+    sudo /usr/sbin/update-alternatives --auto java
+    sudo /usr/sbin/update-alternatives --auto javaplugin
+
 
     # TODO: 设置 JDK 8 为缺省版本
   fi
@@ -284,9 +296,12 @@ if [ "$define_bash_zypper_aliases" != "0" -a "$BASH_ZYPPER_ALIASES_DEFINED_KEY_C
   echo 'alias zls="zypper ls"'>>~/.bashrc
   echo 'alias zmr="sudo zypper mr"'>>~/.bashrc
   echo 'alias zrr="sudo zypper rr"'>>~/.bashrc
+  echo 'alias zar="sudo zypper ar"'>>~/.bashrc
+  echo 'alias zref="sudo zypper ref"'>>~/.bashrc
   echo 'alias zrm="sudo zypper rm -u"'>>~/.bashrc
   echo 'alias zse="zypper se"'>>~/.bashrc
   echo 'alias zinfo="zypper info"'>>~/.bashrc
+  echo 'alias skill9="sudo kill -9"'>>~/.bashrc
 fi
 
 BASH_XUNLEI_LIXIAN_ALIASES_DEFINED_KEY="# === ooci bash xunlei lixian aliases ==="
