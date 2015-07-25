@@ -4,13 +4,13 @@ then
 fi
 if [ "`uname -m`"="x86_64" ]
 then
-  JDK_FILE_NAME="jdk-8u45-linux-x64.rpm"
-  JDK_RPM_NAME="jdk1.8.0_45-1.8.0_45-fcs.x86_64"
+  JDK_FILE_NAME="jdk-8u51-linux-x64.rpm"          # 更新时需要修改的值
+  JDK_RPM_NAME="jdk1.8.0_51-1.8.0_51-fcs.x86_64" # 更新时需要修改的值
 else
-  JDK_FILE_NAME="jdk-8u45-linux-i586.rpm"
-  JDK_RPM_NAME="jdk1.8.0_45-1.8.0_45-fcs"
+  JDK_FILE_NAME="jdk-8u51-linux-i586.rpm" # 更新时需要修改的值
+  JDK_RPM_NAME="jdk1.8.0_51-1.8.0_51-fcs" # 更新时需要修改的值
 fi
-JDK_DL_URL="http://download.oracle.com/otn-pub/java/jdk/8u45-b14/$JDK_FILE_NAME"
+JDK_DL_URL="http://download.oracle.com/otn-pub/java/jdk/8u51-b16/$JDK_FILE_NAME" # 更新时需要修改的值
 JDK_INSTALLED_RPM_COUNT=`rpm -qa|grep $JDK_RPM_NAME|wc -l`
 
 if [ "$JDK_INSTALLED_RPM_COUNT" == "0" ]
@@ -21,7 +21,6 @@ then
   else
     wget -c -p ~ --no-check-certificate --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk8-downloads-2133151.html; oraclelicense=accept-securebackup-cookie; s_cc=true; s_sq=%5B%5BB%5D%5D" "$JDK_DL_URL"
   fi
-
   
   sudo rpm -Uvh --nodeps ~/$JDK_FILE_NAME
   JAVA_BIN_PATH=`rpm -ql $JDK_RPM_NAME|grep -E '[0-9]+/bin/java$'`

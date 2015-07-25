@@ -37,11 +37,12 @@ if [ "$disable_cd_repo" != "0" ]; then
 fi
 
 # 启用 aliyun 相关镜像源
-sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/oss/suse/ openSUSE-Oss-aliyun && sudo zypper mr -d  repo-oss
-sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/non-oss/suse openSUSE-Non-Oss-aliyun && sudo zypper mr -d  repo-non-oss
-sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/update/$OSVER/ openSUSE-Update-aliyun && sudo zypper mr -d  repo-update
-sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/update/$OSVER-non-oss/ openSUSE-Update-Non-Oss-aliyun && sudo zypper mr -d  repo-update-non-oss
-
+if [ "$enable_openSUSE_aliyun_mirrors" != "0" ]; then
+  sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/oss/suse/ openSUSE-Oss-aliyun && sudo zypper mr -d  repo-oss
+  sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/non-oss/suse openSUSE-Non-Oss-aliyun && sudo zypper mr -d  repo-non-oss
+  sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/update/$OSVER/ openSUSE-Update-aliyun && sudo zypper mr -d  repo-update
+  sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/update/$OSVER-non-oss/ openSUSE-Update-Non-Oss-aliyun && sudo zypper mr -d  repo-update-non-oss
+fi
 # 添加软件源
 # w32codec-all 需要该源
 sudo zypper --gpg-auto-import-keys ar -fG http://packman.inode.at/suse/openSUSE_$OSVER/ packman
