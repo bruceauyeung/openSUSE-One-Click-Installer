@@ -36,6 +36,12 @@ if [ "$disable_cd_repo" != "0" ]; then
   fi
 fi
 
+# 启用 aliyun 相关镜像源
+sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/oss/suse/ openSUSE-Oss-aliyun && sudo zypper mr -d  repo-oss
+sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/non-oss/suse openSUSE-Non-Oss-aliyun && sudo zypper mr -d  repo-non-oss
+sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/update/$OSVER/ openSUSE-Update-aliyun && sudo zypper mr -d  repo-update
+sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/update/$OSVER-non-oss/ openSUSE-Update-Non-Oss-aliyun && sudo zypper mr -d  repo-update-non-oss
+
 # 添加软件源
 # w32codec-all 需要该源
 sudo zypper --gpg-auto-import-keys ar -fG http://packman.inode.at/suse/openSUSE_$OSVER/ packman
@@ -75,9 +81,11 @@ fi
 
 if [ "$install_google_chrome" != "0" ]; then
   # 在大陆常常不能访问 dl.google.com，所以添加 IP地址映射
-  sudo sh -c "echo '203.208.46.163    dl.google.com' > /etc/hosts"
+  # sudo sh -c "echo '203.208.46.163    dl.google.com' > /etc/hosts"
   # Google Chrome
-  sudo zypper --gpg-auto-import-keys ar -fG http://dl.google.com/linux/chrome/rpm/stable/$(uname -m) Google-Chrome
+  # sudo zypper --gpg-auto-import-keys ar -fG http://dl.google.com/linux/chrome/rpm/stable/$(uname -m) Google-Chrome
+  # 在大陆常常不能访问 dl.google.com，所以启用 fdzh google chrome 镜像源
+  sudo zypper --gpg-auto-import-keys ar -fGr http://repo.fdzh.org/chrome/google-chrome-mirrors.repo
   sudo zypper ref
   sudo zypper -n in -l google-chrome-stable
 fi
