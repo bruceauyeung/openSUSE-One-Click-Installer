@@ -38,17 +38,17 @@ fi
 
 # 启用 aliyun 相关镜像源
 if [ "$enable_openSUSE_aliyun_mirrors" != "0" ]; then
-  sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/oss/suse/ openSUSE-Oss-aliyun && sudo zypper mr -d  repo-oss
-  sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/non-oss/suse openSUSE-Non-Oss-aliyun && sudo zypper mr -d  repo-non-oss
-  sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/update/$OSVER/ openSUSE-Update-aliyun && sudo zypper mr -d  repo-update
-  sudo zypper --gpg-auto-import-keys ar -fG http://mirrors.aliyun.com/opensuse/update/$OSVER-non-oss/ openSUSE-Update-Non-Oss-aliyun && sudo zypper mr -d  repo-update-non-oss
+  sudo zypper --gpg-auto-import-keys ar -f http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/oss/suse/ openSUSE-Oss-aliyun && sudo zypper mr -d  repo-oss
+  sudo zypper --gpg-auto-import-keys ar -f http://mirrors.aliyun.com/opensuse/distribution/$OSVER/repo/non-oss/suse openSUSE-Non-Oss-aliyun && sudo zypper mr -d  repo-non-oss
+  sudo zypper --gpg-auto-import-keys ar -f http://mirrors.aliyun.com/opensuse/update/$OSVER/ openSUSE-Update-aliyun && sudo zypper mr -d  repo-update
+  sudo zypper --gpg-auto-import-keys ar -f http://mirrors.aliyun.com/opensuse/update/$OSVER-non-oss/ openSUSE-Update-Non-Oss-aliyun && sudo zypper mr -d  repo-update-non-oss
 fi
 # 添加软件源
 # w32codec-all 需要该源
-sudo zypper --gpg-auto-import-keys ar -fG http://packman.inode.at/suse/openSUSE_$OSVER/ packman
+sudo zypper --gpg-auto-import-keys ar -f http://mirrors.aliyun.com/packman/openSUSE_$OSVER/ packman-aliyun
 
 #w32codec-all依赖于包 libstdc++33， 而devel:gcc 里有 libstdc++33
-sudo zypper --gpg-auto-import-keys ar -fG http://download.opensuse.org/repositories/devel:/gcc/openSUSE_$OSVER/ devel:gcc
+sudo zypper --gpg-auto-import-keys ar -f http://download.opensuse.org/repositories/devel:/gcc/openSUSE_$OSVER/ devel:gcc
 
 
 # 刷新软件源并更新系统
@@ -69,9 +69,9 @@ fi
 
 if [ "$install_kwplayer" != "0" ]; then
   # kwplayer needs this repo
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
   # kwplayer needs python3-leveldb
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/devel:/languages:/python3/openSUSE_$OSVER/devel:languages:python3.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/devel:/languages:/python3/openSUSE_$OSVER/devel:languages:python3.repo
   sudo zypper -n in -l python3-leveldb dbus-1-python3 kwplayer
 fi
 
@@ -84,9 +84,9 @@ if [ "$install_google_chrome" != "0" ]; then
   # 在大陆常常不能访问 dl.google.com，所以添加 IP地址映射
   # sudo sh -c "echo '203.208.46.163    dl.google.com' > /etc/hosts"
   # Google Chrome
-  # sudo zypper --gpg-auto-import-keys ar -fG http://dl.google.com/linux/chrome/rpm/stable/$(uname -m) Google-Chrome
+  # sudo zypper --gpg-auto-import-keys ar -f http://dl.google.com/linux/chrome/rpm/stable/$(uname -m) Google-Chrome
   # 在大陆常常不能访问 dl.google.com，所以启用 fdzh google chrome 镜像源
-  sudo zypper --gpg-auto-import-keys ar -fGr http://repo.fdzh.org/chrome/google-chrome-mirrors.repo
+  sudo zypper --gpg-auto-import-keys ar -fr http://repo.fdzh.org/chrome/google-chrome-mirrors.repo
   sudo zypper ref
   sudo zypper -n in -l google-chrome-stable
 fi
@@ -97,14 +97,14 @@ if [ "$install_quassel" != "0" ]; then
 fi
 
 if [ "$install_plasmoid_yawp" != "0" ]; then
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_$OSVER/KDE:Extra.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_$OSVER/KDE:Extra.repo
   # 天气预报插件
   sudo zypper -n in -l plasmoid-yawp
 fi
 
 if [ "$install_fdesktoprecorder" != "0" ]; then
   # FDesktopRecorder 依赖 ffmpeg 等来自于 Packman 的包，通过指定软件源来强制改变提供商
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/ecsos/openSUSE_$OSVER/home:ecsos.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/home:/ecsos/openSUSE_$OSVER/home:ecsos.repo
   sudo zypper -n in -l packman:libavutil52 packman:libswscale2 packman:libswresample0 packman:libavresample1 packman:libavfilter4 packman:libavdevice55 packman:ffmpeg FDesktopRecorder
 fi
 
@@ -118,7 +118,7 @@ if [ "$install_libreoffice_l10n_zh_cn"!="0" ]; then
 fi
 
 if [ "$install_tomahawk" != "0" ]; then
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_$OSVER/KDE:Extra.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/KDE:/Extra/openSUSE_$OSVER/KDE:Extra.repo
   # tomahawk use phonon-backend-vlc, so vlc-codecs ( in packman ) is needed.
   sudo zypper -n in -l tomahawk packman:vlc-codecs
 fi
@@ -131,7 +131,7 @@ fi
 # TODO:自动挂载windows分区
 # 自动安装 Oracle Java
 if [ "$install_oracle_java" != "0" ]; then
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_$OSVER/home:Superpeppo89.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_$OSVER/home:Superpeppo89.repo
   zypper -n in -l java-1_8_0-sun java-1_8_0-sun-plugin
 fi
 
@@ -141,7 +141,7 @@ source Oracle-JDK-Installer.sh
 fi
 
 if [ "$fix_javafx_mediaplayer_creation_error" != "0" ]; then
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_$OSVER/home:Superpeppo89.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/home:/Superpeppo89/openSUSE_$OSVER/home:Superpeppo89.repo
   
   # see http://www.oracle.com/technetwork/java/javase/certconfig-2095354.html
   zypper -n in -l libavformat53
@@ -168,13 +168,13 @@ sudo zypper -n in -l p7zip
 sudo zypper -n in -l unzip-rcc
 
 if [ "$install_iptux" != "0" ]; then
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
   # 飞鸽传书的 linux 版本
   sudo zypper -n in -l iptux
 fi
 
 if [ "$install_hotshots" != "0" ]; then
-  sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/Lazy_Kent/openSUSE_$OSVER/home:Lazy_Kent.repo
+  sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/home:/Lazy_Kent/openSUSE_$OSVER/home:Lazy_Kent.repo
   sudo zypper -n in -l hotshots
 fi
 
@@ -221,8 +221,8 @@ mkdir -p ~/.kde4/share/apps/katepart/syntax/ && aria2c --conditional-get=true --
 
 if [ "$install_bcloud" != "0" ]; then
     # kwplayer needs this repo
-    sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
-    sudo zypper --gpg-auto-import-keys ar -fG -r http://download.opensuse.org/repositories/devel:/languages:/python3/openSUSE_$OSVER/devel:languages:python3.repo
+    sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_$OSVER/home:opensuse_zh.repo
+    sudo zypper --gpg-auto-import-keys ar -f -r http://download.opensuse.org/repositories/devel:/languages:/python3/openSUSE_$OSVER/devel:languages:python3.repo
     sudo zypper -n in home_opensuse_zh:bcloud devel_languages_python3:python3-keyring
 fi
 
